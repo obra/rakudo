@@ -35,6 +35,7 @@ MAIN: {
 
     # Get a list of parrot-configs to invoke.
     my @parrot_config_exe = qw(
+        parinst/bin/parrot_config
         parrot/parrot_config
         ../../parrot_config
         parrot_config
