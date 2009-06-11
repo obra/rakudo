@@ -186,7 +186,7 @@ HARNESS_WITH_FUDGE = $(PERL) t/harness --fudge --keep-exit-code --icu=$(HAS_ICU)
 HARNESS_WITH_FUDGE_JOBS = $(HARNESS_WITH_FUDGE) --jobs
 
 # the default target
-all: perl6.pbc
+all: perl6$(EXE)
 
 xmas: perl6$(EXE)
 
