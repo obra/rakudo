@@ -15,7 +15,7 @@ CC_OUT        = @cc_o_out@
 CFLAGS        = @ccflags@ @cc_shared@ @cc_debug@ @ccwarn@ @cc_hasjit@ @cg_flag@ @gc_flag@
 LD            = @ld@
 LD_OUT        = @ld_out@
-LDFLAGS       = @ldflags@ @lddebug@
+LDFLAGS       = @ldflags@ @ld_debug@
 LD_LOAD_FLAGS = @ld_load_flags@
 LIBPARROT     = @inst_libparrot_ldflags@
 O             = @o@
@@ -51,8 +51,6 @@ DYNPMC         = $(DYNEXT)/$(GROUP)$(LOAD_EXT)
 DYNOPS         = $(DYNEXT)/$(OPS)$(LOAD_EXT)
 
 SOURCES = perl6.pir \
-  $(DYNPMC) \
-  $(DYNOPS) \
   src/gen_grammar.pir \
   src/gen_actions.pir \
   src/gen_builtins.pir \
@@ -68,6 +66,8 @@ SOURCES = perl6.pir \
   src/parrot/misc.pir \
   src/parrot/state.pir \
   src/gen_uprop.pir \
+  $(DYNPMC) \
+  $(DYNOPS)
 
 BUILTINS_PIR = \
   src/classes/Object.pir \
