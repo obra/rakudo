@@ -340,13 +340,8 @@ help:
 config:
 	$(PERL) Configure.pl
 	
+$(PARROT):
 
-# ##  Parrot targets
-# parrot: build/PARROT_REVISION build/gen_parrot.pl
-# 	$(PERL) Configure.pl --gen-parrot
-# $(PARROT):
-#
-#
 CRITIC_FILES=Configure.pl t/harness build/ tools/
 
 perlcritic:
