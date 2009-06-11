@@ -32,7 +32,7 @@ close $REQ;
 
 {
     no warnings;
-    if (open my $REV, '-|', "parrot${slash}install${slash}parrot_config revision") {
+    if (open my $REV, '-|', "parrot${slash}install${slash}bin${slash}parrot_config revision") {
         my $revision = 0+<$REV>;
         close $REV;
         if ($revision >= $required) {
