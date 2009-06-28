@@ -24,14 +24,6 @@ src/builtins/globals.pir - initialize miscellaneous global variables
     env = root_new ['parrot';'Env']
     set_hll_global '%ENV', env
 
-    ##  set up @*INC
-    $S0 = env['PERL6LIB']
-    $P0 = split ':', $S0
-    push $P0, '.'
-    $P0 = 'list'($P0)
-    $P0 = $P0.'Array'()
-    set_hll_global '@INC', $P0
-
     ##  set up %*INC
     $P0 = new ['Perl6Hash']
     set_hll_global '%INC', $P0

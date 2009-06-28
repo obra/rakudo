@@ -15,10 +15,9 @@ END_SETTING
 
 foreach my $file (@files) {
     print "# From $file\n\n";
-    open(my $fh, "< $file") or die $!;
-    print join('', <$fh>);
-    close $fh;
+    print_file($file);
 }
+
 
 my @classes = ('Any');
 foreach my $file (@files) {
@@ -30,12 +29,24 @@ foreach my $file (@files) {
 print <<"END_SETTING";
 # Need to import all built-in classes and set \%*INC for each.
 sub SETTING_INIT() {
+
 END_SETTING
+
+
 s/\\/\//g for @classes;
 print join('', map {
         my $colon_form = $_;
         $colon_form =~ s/[\/\\]/::/g;
         "  \%*INC<$_> = 1;\n  Perl6::Compiler.import('$colon_form', ':DEFAULT', ':MANDATORY');\n"
     } @classes);
+
+print_file('src/setting/_init.pm');
+
 print "}\n";
 
+sub print_file {
+    my $file = shift;
+    open(my $fh, "< $file") or die "$file: ".$!;
+    print join('', <$fh>);
+    close $fh;
+}
