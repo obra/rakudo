@@ -4,6 +4,18 @@
 # arguments we want to run parrot with
 PARROT_ARGS =
 
+# Where should we be installing rakudo
+DESTDIR		      =
+PREFIX		      = @install-prefix@
+INSTALL			  = install
+INSTALL_BIN_DIR	  = $(PREFIX)/bin/
+INSTALL_LIB_DIR	  = $(PREFIX)/lib/rakudo/perl6
+INSTALL_SITE_LIB_DIR	  = $(PREFIX)/lib/rakudo/site_perl6
+
+# Where should we find code to install
+RAKUDO_BINARIES	  = ./perl6 
+RAKUDO_PERL6_LIB  = ./lib
+
 # values from parrot_config
 BUILD_DIR     = @build_dir@
 LOAD_EXT      = @load_ext@
@@ -22,6 +34,7 @@ PMC_DIR       = src/pmc
 OPSDIR        = src/ops
 OPSLIB        = perl6
 OPS_FILE      = src/ops/perl6.ops
+
 
 # Setup some commands
 PARROT        = $(BUILD_DIR)/parrot$(EXE)
@@ -336,6 +349,30 @@ Makefile: build/Makefile.in build/PARROT_REVISION $(PARROT) Configure.pl
 config:
 	$(PERL) Configure.pl
 	
+
+install: all check-install-dir install-bin install-lib
+
+check-install-dir:
+	@[ -d '$(DESTDIR)$(PREFIX)' ] ||  (echo "Your installation prefix '$(PREFIX)' doesn't seem to exist.\n\nPlease create it or specify another directory with the --prefix argument\nto Configure.pl." ; exit -1)
+
+install-bin:
+	$(INSTALL) -m 0755 -d $(DESTDIR)$(INSTALL_BIN_DIR)
+	for file in $(RAKUDO_BINARIES) ; do \
+        $(INSTALL) -m 0755 "$$file" "$(DESTDIR)$(INSTALL_BIN_PATH)/" ; \
+    done
+
+
+install-lib:
+	$(INSTALL) -m 0755 -d $(DESTDIR)$(INSTALL_SITE_LIB_DIR)
+	[ -d $(DESTDIR)$(INSTALL_LIB_DIR) ] || $(INSTALL) -m 0755 -d $(DESTDIR)$(INSTALL_LIB_DIR)
+	-( cd lib && find . -type d -name .svn -prune -o -type d -print ) | while read dir ; do \
+		$(INSTALL) -m 0755 -d "$(DESTDIR)$(INSTALL_LIB_DIR)/$$dir" ; \
+   done
+	-( cd lib && find . -type d -name .svn -prune -o -type f -print ) | while read file ; do \
+	$(INSTALL) -m 0644 "lib/$$file" "$(DESTDIR)$(INSTALL_LIB_DIR)/$$file" ; \
+	done
+
+
 
 ##  Parrot targets
 parrot: build/PARROT_REVISION build/gen_parrot.pl

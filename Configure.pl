@@ -9,6 +9,7 @@ use Getopt::Long;
 MAIN: {
     my %options;
     GetOptions(\%options, 'help!', 'parrot-config=s',
+               'prefix=s',
                'gen-parrot!', 'gen-parrot-option=s@');
 
     # Print help if it's requested
@@ -47,7 +48,6 @@ MAIN: {
 
     #  Get configuration information from parrot_config
     my %config = read_parrot_config(@parrot_config_exe);
-
     my $parrot_errors = '';
     if (!%config) { 
         $parrot_errors .= "Unable to locate parrot_config\n"; 
@@ -67,7 +67,9 @@ the location of parrot_config to be used to build Rakudo Perl.
 END
     }
 
-#  Create the Makefile using the information we just got
+    $config{'install-prefix'} = $options{prefix};
+    #  Create the Makefile using the information we just got
+
     create_makefile(%config);
     my $make = $config{'make'};
 
@@ -118,7 +120,7 @@ sub create_makefile {
     my $maketext = slurp( 'build/Makefile.in' );
 
     $config{'win32_libparrot_copy'} = $^O eq 'MSWin32' ? 'copy $(BUILD_DIR)\libparrot.dll .' : '';
-    $maketext =~ s/@(\w+)@/$config{$1}/g;
+    $maketext =~ s/@([\w-]+)@/$config{$1}/g;
     if ($^O eq 'MSWin32') {
         $maketext =~ s{/}{\\}g;
         $maketext =~ s{\\\*}{\\\\*}g;
